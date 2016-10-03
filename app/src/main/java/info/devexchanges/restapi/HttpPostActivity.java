@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,10 +23,14 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class HttpPostActivity extends AppCompatActivity {
 
+    private TextView textView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        textView = (TextView)findViewById(R.id.text);
 
         new GetDataTask().execute();
     }
@@ -48,7 +53,6 @@ public class HttpPostActivity extends AppCompatActivity {
                 //get response
                 if (myConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     Log.i("Main", "getresponse code 200: ");
-                    String result;
                     // Get InputStream
                     InputStream is = myConnection.getInputStream();
                     // Convert the InputStream into a string
@@ -62,8 +66,7 @@ public class HttpPostActivity extends AppCompatActivity {
                     }
 
                     byte[] bytes = total.toString().getBytes();
-                    result = new String(bytes, Charset.forName(charset));
-                    Log.d("Main", result);
+                    return new String(bytes, Charset.forName(charset));
 
                 } else {
                     // Server returned HTTP error code.
@@ -78,7 +81,7 @@ public class HttpPostActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.i("Main", "result: " + s);
+            textView.setText(s);
         }
     }
 }
